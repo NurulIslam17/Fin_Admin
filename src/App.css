@@ -1,0 +1,7 @@
+.login-bg {
+  background-image: url("../../../UI/fin_admin/src/assets/images/loginBg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
