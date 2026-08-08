@@ -148,20 +148,24 @@ const ManageRoles = () => {
 
       {/* Header */}
 
-      <div className="bg-white rounded-xl shadow ">
+      <div >
 
-        <div className=" p-5">
-          <h2 className="text-2xl font-bold">
-            Assign Role Permissions
-          </h2>
-          <p className="text-gray-500 mt-1">
-            Select a role and assign permissions.
-          </p>
+        <div className="px-5">
+          <div className="p-5 bg-gray-300 rounded-lg px-2 py-3">
+            <h2 className="text-2xl font-bold">
+              Assign Role Permissions
+            </h2>
+            <p className="text-gray-500 mt-1">
+              Select a role and assign permissions.
+            </p>
+          </div>
         </div>
+
+
 
         {/* Role */}
 
-        <div className="p-5">
+        <div className="px-5 mt-1">
 
           <label className="block font-medium mb-2">
             Select Role
