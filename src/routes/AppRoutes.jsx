@@ -14,6 +14,8 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Roles from "../pages/roles/Roles";
 import Permissions from "../pages/permissions/Permissions";
 import NotFound from "../pages/errors/NotFound";
+import ManagePermissions from "../pages/permissions/ManageRoles";
+import ManageRoles from "../pages/permissions/ManageRoles";
 
 
 export default function AppRoutes() {
@@ -22,9 +24,7 @@ export default function AppRoutes() {
             <Routes>
 
                 {/* Public */}
-
                 <Route path={ROUTES.LOGIN} element={<Login />} />
-
                 <Route path={ROUTES.REGISTER} element={<Register />} />
 
                 {/* Protected */}
@@ -45,6 +45,11 @@ export default function AppRoutes() {
                         <Route
                             path={ROUTES.PERMISSIONS}
                             element={<Permissions />}
+                        />
+
+                        <Route
+                            path={ROUTES.MANAGE_ROLES}
+                            element={<ManageRoles />}
                         />
 
                         {/*

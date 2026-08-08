@@ -11,6 +11,7 @@ import {
     LogOut,
     ChevronDown,
     ChevronRight,
+    UserCog,
 } from "lucide-react";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -49,6 +50,11 @@ const settingsMenus = [
         name: "Permissions",
         icon: KeyRound,
         path: "/permissions",
+    },
+    {
+        name: "Manage Roles",
+        icon: UserCog,
+        path: "/manage-roles",
     },
     {
         name: "Profile",
@@ -98,8 +104,8 @@ export default function Sidebar() {
                             key={menu.path}
                             to={menu.path}
                             className={`mb-2 flex items-center rounded-lg px-4 py-3 transition ${active
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-blue-600 text-white"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Icon size={20} />
@@ -120,8 +126,8 @@ export default function Sidebar() {
                 <button
                     onClick={() => setSettingsOpen(!settingsOpen)}
                     className={`flex w-full items-center justify-between rounded-lg px-4 py-3 transition ${isSettingsActive
-                            ? "bg-blue-600 text-white"
-                            : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-700 hover:bg-gray-100"
                         }`}
                 >
                     <div className="flex items-center">
@@ -151,8 +157,8 @@ export default function Sidebar() {
                                     key={menu.path}
                                     to={menu.path}
                                     className={`mb-1 flex items-center rounded-lg px-3 py-2 transition ${active
-                                            ? "bg-blue-600 text-white"
-                                            : "text-gray-700 hover:bg-gray-100"
+                                        ? "bg-blue-600 text-white"
+                                        : "text-gray-700 hover:bg-gray-100"
                                         }`}
                                 >
                                     <Icon size={18} />
