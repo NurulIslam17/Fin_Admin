@@ -11,6 +11,7 @@ const ROUTES = {
     ROLE_EDIT: "/roles/:id/edit",
 
     PERMISSIONS: "/permissions",
+    MANAGE_ROLES: "/manage-roles",
 
     PROFILE: "/profile",
     EDIT_PROFILE: "/profile/edit",
