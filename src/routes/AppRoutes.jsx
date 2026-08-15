@@ -16,6 +16,9 @@ import Permissions from "../pages/permissions/Permissions";
 import NotFound from "../pages/errors/NotFound";
 import ManagePermissions from "../pages/permissions/ManageRoles";
 import ManageRoles from "../pages/permissions/ManageRoles";
+import ProfileView from "../pages/profile/ProfileView";
+import CustomerList from "../pages/customers/CustomerList";
+import AccountList from "../pages/accounts/AccountList";
 
 
 export default function AppRoutes() {
@@ -52,6 +55,22 @@ export default function AppRoutes() {
                             element={<ManageRoles />}
                         />
 
+                        <Route
+                            path={ROUTES.PROFILE}
+                            element={<ProfileView />}
+                        />
+
+                        <Route
+                            path={ROUTES.CUSTOMER}
+                            element={<CustomerList />}
+                        />
+
+                        <Route
+                            path={ROUTES.ACCOUNT}
+                            element={<AccountList />}
+                        />
+
+
                         {/*
 
                         <Route
@@ -62,12 +81,6 @@ export default function AppRoutes() {
                         <Route
                             path={ROUTES.ROLE_EDIT}
                             element={<EditRole />}
-                        />
-
-
-                        <Route
-                            path={ROUTES.PROFILE}
-                            element={<Profile />}
                         />
 
                         <Route
