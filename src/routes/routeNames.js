@@ -17,6 +17,10 @@ const ROUTES = {
     EDIT_PROFILE: "/profile/edit",
     CHANGE_PASSWORD: "/profile/change-password",
 
+    CUSTOMER: "/customers",
+    ACCOUNT: "/accounts",
+
+
     UNAUTHORIZED: "/403",
 
     NOT_FOUND: "*",

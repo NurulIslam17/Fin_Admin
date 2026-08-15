@@ -32,12 +32,7 @@ const mainMenus = [
         name: "Accounts",
         icon: Wallet,
         path: "/accounts",
-    },
-    {
-        name: "Products",
-        icon: Package,
-        path: "/products",
-    },
+    }
 ];
 
 const settingsMenus = [
