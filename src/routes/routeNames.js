@@ -13,6 +13,8 @@ const ROUTES = {
     PERMISSIONS: "/permissions",
     MANAGE_ROLES: "/manage-roles",
 
+    USER_LIST: "/users",
+
     PROFILE: "/profile",
     EDIT_PROFILE: "/profile/edit",
     CHANGE_PASSWORD: "/profile/change-password",

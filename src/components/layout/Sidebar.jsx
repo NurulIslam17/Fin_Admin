@@ -12,10 +12,12 @@ import {
     ChevronDown,
     ChevronRight,
     UserCog,
+    UsersRound,
 } from "lucide-react";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import ROUTES from "../../routes/routeNames";
 
 const mainMenus = [
     {
@@ -50,6 +52,11 @@ const settingsMenus = [
         name: "Manage Roles",
         icon: UserCog,
         path: "/manage-roles",
+    },
+        {
+        name: "Users",
+        icon: UsersRound,
+        path: `${ROUTES.USER_LIST}`,
     },
     {
         name: "Profile",
