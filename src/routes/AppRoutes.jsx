@@ -19,6 +19,7 @@ import ManageRoles from "../pages/permissions/ManageRoles";
 import ProfileView from "../pages/profile/ProfileView";
 import CustomerList from "../pages/customers/CustomerList";
 import AccountList from "../pages/accounts/AccountList";
+import UserList from "../pages/user/UserList";
 
 
 export default function AppRoutes() {
@@ -53,6 +54,10 @@ export default function AppRoutes() {
                         <Route
                             path={ROUTES.MANAGE_ROLES}
                             element={<ManageRoles />}
+                        />
+                        <Route
+                            path={ROUTES.USER_LIST}
+                            element={<UserList />}
                         />
 
                         <Route
