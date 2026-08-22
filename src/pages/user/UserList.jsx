@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import userService from '../../services/userService';
+import OfficeUserAdd from '../../components/user/OfficeUserAdd';
+import roleService from '../../services/roleService';
 
 const UserList = () => {
 
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({});
+    const [roles, setRoles] = useState([]);
     const [officeUsers, setOfficeUsers] = useState([]);
+    const [addModalOpen, setAddModalOpen] = useState(false);
+    const [params, setParams] = useState({
+        'page': 1,
+        'per_page': 10,
+        'role': "",
+        'email': "",
+        'emp_id': ""
+    })
 
-    const fetchOfficeUser = async () => {
+
+    const fetchRoles = async () => {
+        const response = await roleService.getRoles();
+        setRoles(response?.data);
+    }
+
+
+    const fetchOfficeUser = async (params = {}) => {
 
         try {
             setLoading(true);
-            const response = await userService.getAllOfficeUsers();
+            const response = await userService.getAllOfficeUsers(params);
 
             if (response?.status) {
                 setPagination(response?.data);
@@ -27,6 +45,10 @@ const UserList = () => {
 
     }
 
+    const handleModalClose = () => {
+        setAddModalOpen(false);
+    }
+
     const formatDate = (date) => {
         if (!date) return "N/A";
 
@@ -38,8 +60,12 @@ const UserList = () => {
     };
 
     useEffect(() => {
-        fetchOfficeUser();
+        fetchRoles();
     }, [])
+
+    useEffect(() => {
+        fetchOfficeUser(params);
+    }, [params])
 
     return (
         <div className="p-6">
@@ -47,10 +73,137 @@ const UserList = () => {
                 <h1 className="text-2xl font-semibold">User</h1>
 
                 <button
+                    onClick={() => { setAddModalOpen(true) }}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                     Add Office User
                 </button>
+            </div>
+
+            {/* Filter Section */}
+
+            <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div className="mb-4 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-base font-semibold text-gray-800">
+                            Filter Office Users
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            Search and filter office users.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            setParams({
+                                page: 1,
+                                per_page: 10,
+                                role: "",
+                                email: "",
+                                emp_id: "",
+                            });
+                        }}
+                        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
+                    >
+                        Reset
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    {/* Per Page */}
+                    <div>
+                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                            Items Per Page
+                        </label>
+
+                        <select
+                            value={params.per_page}
+                            onChange={(e) =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    per_page: Number(e.target.value),
+                                    page: 1,
+                                }))
+                            }
+                            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                            <option value={500}>500</option>
+                        </select>
+                    </div>
+                    {/* Role */}
+                    <div>
+                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                            Role
+                        </label>
+
+                        <select
+                            value={params.role}
+                            onChange={(e) =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    role: e.target.value,
+                                    page: 1,
+                                }))
+                            }
+                            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="">All Roles</option>
+
+                            {roles && roles.map((branch) => (
+                                <option key={branch.id} value={branch?.id}>
+                                    {branch.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Search by email..."
+                            value={params.email}
+                            onChange={(e) =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    email: e.target.value,
+                                    page: 1,
+                                }))
+                            }
+                            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                    </div>
+
+                    {/* Employee ID */}
+                    <div>
+                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                            Employee ID
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Search by employee ID..."
+                            value={params.emp_id}
+                            onChange={(e) =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    emp_id: e.target.value,
+                                    page: 1,
+                                }))
+                            }
+                            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="bg-white shadow overflow-hidden">
@@ -224,26 +377,87 @@ const UserList = () => {
                 </div>
             </div>
 
-            {/* Pagination info */}
-            {!loading && officeUsers.length > 0 && (
-                <div className="flex items-center justify-between border-t px-6 py-4">
-                    <p className="text-sm text-gray-500">
+            {/* Pagination */}
+            {!loading && pagination?.last_page > 1 && (
+                <div className="flex flex-col items-center justify-between gap-4 border-t bg-white px-6 py-4 sm:flex-row">
+
+                    {/* Showing info */}
+                    <div className="text-sm text-gray-600">
                         Showing{" "}
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold">
                             {pagination?.from || 0}
                         </span>{" "}
                         to{" "}
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold">
                             {pagination?.to || 0}
                         </span>{" "}
                         of{" "}
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold">
                             {pagination?.total || 0}
                         </span>{" "}
-                        users
-                    </p>
+                        results
+                    </div>
+
+                    {/* Pagination buttons */}
+                    <div className="flex items-center gap-1">
+
+                        {/* Previous */}
+                        <button
+                            type="button"
+                            disabled={!pagination?.prev_page_url}
+                            onClick={() =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    page: prev.page - 1,
+                                }))
+                            }
+                            className="rounded-md border px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            Previous
+                        </button>
+
+                        {Array.from(
+                            { length: pagination?.last_page || 1 },
+                            (_, index) => index + 1
+                        ).map((page) => (
+                            <button
+                                key={page}
+                                type="button"
+                                onClick={() =>
+                                    setParams((prev) => ({
+                                        ...prev,
+                                        page: page,
+                                    }))
+                                }
+                                className={`min-w-10 rounded-md px-3 py-2 text-sm font-medium transition ${pagination?.current_page === page
+                                    ? "bg-blue-600 text-white"
+                                    : "border text-gray-700 hover:bg-gray-100"
+                                    }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+
+                        {/* Next */}
+                        <button
+                            type="button"
+                            disabled={!pagination?.next_page_url}
+                            onClick={() =>
+                                setParams((prev) => ({
+                                    ...prev,
+                                    page: prev.page + 1,
+                                }))
+                            }
+                            className="rounded-md border px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             )}
+            <OfficeUserAdd
+                isOpen={addModalOpen} onClose={handleModalClose} roles={roles} fetchOfficeUser={fetchOfficeUser}
+            />
         </div>
     )
 }
