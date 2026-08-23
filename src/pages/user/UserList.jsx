@@ -219,7 +219,7 @@ const UserList = () => {
                                     Name
                                 </th>
 
-                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
                                     Employee ID
                                 </th>
 
@@ -235,11 +235,11 @@ const UserList = () => {
                                     Designation
                                 </th>
 
-                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
                                     Created At
                                 </th>
 
-                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 whitespace-nowrap">
                                     Last Update
                                 </th>
 
@@ -316,7 +316,7 @@ const UserList = () => {
                                             </td>
 
                                             {/* Employee ID */}
-                                            <td className="px-6 py-4 text-sm text-gray-700">
+                                            <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                                 {user?.office_user
                                                     ?.employee_id || "N/A"}
                                             </td>
@@ -329,7 +329,7 @@ const UserList = () => {
                                             </td>
 
                                             {/* Branch */}
-                                            <td className="px-6 py-4 text-sm text-gray-700">
+                                            <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                                 {user?.branch?.name || "N/A"}
                                             </td>
 
@@ -340,12 +340,12 @@ const UserList = () => {
                                             </td>
 
                                             {/* Created At */}
-                                            <td className="px-6 py-4 text-sm text-gray-700">
+                                            <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                                 {formatDate(user?.created_at)}
                                             </td>
 
                                             {/* Updated At */}
-                                            <td className="px-6 py-4 text-sm text-gray-700">
+                                            <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                                                 {formatDate(user?.updated_at)}
                                             </td>
 
