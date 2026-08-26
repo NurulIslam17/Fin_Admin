@@ -4,6 +4,8 @@ import {
   KeyRound,
   Activity,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import activitylogService from "../../services/activitylogService";
 
 const cards = [
   {
@@ -51,6 +53,21 @@ const activities = [
 ];
 
 export default function Dashboard() {
+
+  const [params, setParams] = useState({
+    'per_page': 3
+  });
+
+  const [activityLog, setActivityLog] = useState([]);
+
+  const fetchActivityLog = async (params) => {
+    const response = await activitylogService.getActivityLog(params);
+    setActivityLog(response?.data?.data);
+  }
+
+  useEffect(() => {
+    fetchActivityLog(params);
+  }, [params])
 
   return (
 
@@ -137,7 +154,21 @@ export default function Dashboard() {
               </th>
 
               <th className="px-6 py-3 text-left">
-                User
+                Description
+              </th>
+
+
+              <th className="px-6 py-3 text-left">
+                Created By
+              </th>
+
+              <th className="px-6 py-3 text-left">
+                Branch
+              </th>
+
+
+              <th className="px-6 py-3 text-left">
+                Activities
               </th>
 
               <th className="px-6 py-3 text-left">
@@ -150,7 +181,7 @@ export default function Dashboard() {
 
           <tbody>
 
-            {activities.map((activity, index) => (
+            {activityLog && activityLog.map((activity, index) => (
 
               <tr
                 key={index}
@@ -161,12 +192,51 @@ export default function Dashboard() {
                   {activity.action}
                 </td>
 
+
                 <td className="px-6 py-4">
-                  {activity.user}
+                  {activity.description}
+                </td>
+
+                <td className="px-6 py-4">
+                  {activity.user?.name}
+                </td>
+
+                <td className="px-6 py-4">
+                  {activity.user?.branch?.name ?? "Universal"}
+                </td>
+
+                <td className="px-6 py-4">
+                  {activity?.action === "create" &&
+                    activity?.module &&
+                    activity?.new_values?.name ? (
+                    <>
+                      New {activity.module}{" "}
+                      <span className="font-bold">
+                        {activity.new_values.name}
+                      </span>{" "}
+                      is created by{" "}
+                      <span className="font-bold">
+                        {activity.user?.name}
+                      </span>
+                      .
+                    </>
+                  ) : (
+                    "New record is created."
+                  )}
                 </td>
 
                 <td className="px-6 py-4 text-gray-500">
-                  {activity.time}
+                  {activity?.created_at
+                    ? new Date(activity.created_at).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: false,
+                    })
+                    : "-"}
                 </td>
 
               </tr>
