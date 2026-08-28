@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react'
 import userService from '../../services/userService';
 import OfficeUserAdd from '../../components/user/OfficeUserAdd';
 import roleService from '../../services/roleService';
+import { Edit, EyeIcon, Trash2 } from 'lucide-react';
+import { useConfirm } from '../../context/ConfirmModalContext';
+import toast from 'react-hot-toast';
 
 const UserList = () => {
+
+    const { confirm } = useConfirm();
 
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({});
@@ -58,6 +63,28 @@ const UserList = () => {
             year: "numeric",
         });
     };
+
+    const deleteUser = async (id) => {
+        const response = await userService.deleteUserById(id);
+        if (response?.status) {
+            toast.success("User Deleted Successfuly.")
+
+            setOfficeUsers((prevUsers) =>
+                prevUsers.filter((user) => user.id !== id)
+            );
+
+        } else {
+            toast.error("Failed to delete the record!");
+        }
+    }
+
+    const handleDelete = (id, name) => {
+        confirm({
+            title: "Delete User?",
+            message: `Are you sure you want to delete ${name}? This action cannot be undone.`,
+            onConfirm: () => deleteUser(id),
+        });
+    }
 
     useEffect(() => {
         fetchRoles();
@@ -355,16 +382,17 @@ const UserList = () => {
                                                 <div className="flex justify-center gap-2">
                                                     <button
                                                         type="button"
-                                                        className="rounded bg-yellow-500 px-3 py-1 text-sm text-white transition hover:bg-yellow-600"
+                                                        className="rounded cursor-pointer bg-green-500 p-1 text-sm text-black hover:bg-green-300"
                                                     >
-                                                        Edit
+                                                        <EyeIcon />
                                                     </button>
 
                                                     <button
                                                         type="button"
-                                                        className="rounded bg-red-600 px-3 py-1 text-sm text-white transition hover:bg-red-700"
+                                                        onClick={() => handleDelete(user?.id, user?.name)}
+                                                        className="rounded cursor-pointer bg-red-500 p-1 text-sm text-gray-600 hover:bg-red-300 hover:text-white"
                                                     >
-                                                        Delete
+                                                        <Trash2 />
                                                     </button>
                                                 </div>
                                             </td>
