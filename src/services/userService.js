@@ -11,7 +11,13 @@ const addOfficeUser = async (data) => {
     return response?.data;
 }
 
+
+const deleteUserById = async (id) => {
+    const response = await api.delete(`user/${id}`);
+    return response?.data;
+}
 export default {
     getAllOfficeUsers,
-    addOfficeUser
+    addOfficeUser,
+    deleteUserById
 };
