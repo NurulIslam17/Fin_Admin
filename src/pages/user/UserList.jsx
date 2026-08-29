@@ -5,6 +5,7 @@ import roleService from '../../services/roleService';
 import { Edit, EyeIcon, Trash2 } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmModalContext';
 import toast from 'react-hot-toast';
+import OfficeUserDetailsModal from '../../components/user/OfficeUserDetailsModal';
 
 const UserList = () => {
 
@@ -15,6 +16,8 @@ const UserList = () => {
     const [roles, setRoles] = useState([]);
     const [officeUsers, setOfficeUsers] = useState([]);
     const [addModalOpen, setAddModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [params, setParams] = useState({
         'page': 1,
         'per_page': 10,
@@ -382,6 +385,10 @@ const UserList = () => {
                                                 <div className="flex justify-center gap-2">
                                                     <button
                                                         type="button"
+                                                        onClick={() => {
+                                                            setSelectedUser(user);
+                                                            setShowDetailsModal(true);
+                                                        }}
                                                         className="rounded cursor-pointer bg-green-500 p-1 text-sm text-black hover:bg-green-300"
                                                     >
                                                         <EyeIcon />
@@ -486,6 +493,16 @@ const UserList = () => {
             <OfficeUserAdd
                 isOpen={addModalOpen} onClose={handleModalClose} roles={roles} fetchOfficeUser={fetchOfficeUser}
             />
+
+            {showDetailsModal && (
+                <OfficeUserDetailsModal
+                    user={selectedUser}
+                    onClose={() => {
+                        setShowDetailsModal(false);
+                        setSelectedUser(null);
+                    }}
+                />
+            )}
         </div>
     )
 }
