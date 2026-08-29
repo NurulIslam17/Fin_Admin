@@ -16,8 +16,13 @@ const deleteUserById = async (id) => {
     const response = await api.delete(`user/${id}`);
     return response?.data;
 }
+const getOfficeUserById = async (id) =>{
+    const response = await api.get(`office-users/${id}`);
+    return response?.data;
+}
 export default {
     getAllOfficeUsers,
     addOfficeUser,
-    deleteUserById
+    deleteUserById,
+    getOfficeUserById
 };
