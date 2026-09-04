@@ -1,105 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AddModal from "../../components/customer/AddModal";
+import customerService from "../../services/customerService";
 
 const CustomerList = () => {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [kycFilter, setKycFilter] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [customers, setCustomers] = useState([]);
 
     const perPage = 10;
     const [showCreateModal, setShowCreateModal] = useState(false);
 
-    const customers = [
-        {
-            id: 1,
-            customer_no: "CUS-000001",
-            first_name: "John",
-            last_name: "Doe",
-            gender: "MALE",
-            date_of_birth: "1995-05-15",
-            phone: "01712345678",
-            email: "john@example.com",
-            occupation: "Businessman",
-            branch: "Dhaka Main Branch",
-            kyc_status: "VERIFIED",
-            status: "ACTIVE",
-            created_at: "2026-09-01",
-        },
-        {
-            id: 2,
-            customer_no: "CUS-000002",
-            first_name: "Sarah",
-            last_name: "Ahmed",
-            gender: "FEMALE",
-            date_of_birth: "1998-10-12",
-            phone: "01812345678",
-            email: "sarah@example.com",
-            occupation: "Teacher",
-            branch: "Gulshan Branch",
-            kyc_status: "PENDING",
-            status: "ACTIVE",
-            created_at: "2026-09-02",
-        },
-        {
-            id: 3,
-            customer_no: "CUS-000003",
-            first_name: "Michael",
-            last_name: "Hasan",
-            gender: "MALE",
-            date_of_birth: "1990-02-21",
-            phone: "01912345678",
-            email: "michael@example.com",
-            occupation: "Engineer",
-            branch: "Banani Branch",
-            kyc_status: "UNDER_REVIEW",
-            status: "INACTIVE",
-            created_at: "2026-09-02",
-        },
-        {
-            id: 4,
-            customer_no: "CUS-000004",
-            first_name: "Nusrat",
-            last_name: "Jahan",
-            gender: "FEMALE",
-            date_of_birth: "1996-07-11",
-            phone: "01612345678",
-            email: "nusrat@example.com",
-            occupation: "Doctor",
-            branch: "Uttara Branch",
-            kyc_status: "REJECTED",
-            status: "BLOCKED",
-            created_at: "2026-09-03",
-        },
-    ];
-
-    const filteredCustomers = useMemo(() => {
-        return customers.filter((customer) => {
-            const searchText = search.toLowerCase();
-
-            const matchesSearch =
-                customer.customer_no.toLowerCase().includes(searchText) ||
-                customer.first_name.toLowerCase().includes(searchText) ||
-                customer.last_name.toLowerCase().includes(searchText) ||
-                customer.phone.includes(search) ||
-                customer.email?.toLowerCase().includes(searchText);
-
-            const matchesStatus =
-                !statusFilter || customer.status === statusFilter;
-
-            const matchesKyc =
-                !kycFilter || customer.kyc_status === kycFilter;
-
-            return matchesSearch && matchesStatus && matchesKyc;
-        });
-    }, [search, statusFilter, kycFilter]);
-
-    const totalPages = Math.ceil(filteredCustomers.length / perPage);
-
-    const paginatedCustomers = filteredCustomers.slice(
-        (currentPage - 1) * perPage,
-        currentPage * perPage
-    );
+    const getAllCustomer = async () => {
+        const res = await customerService.getAll();
+        setCustomers(res?.data);
+    }
 
     const getKycBadge = (status) => {
         const styles = {
@@ -140,6 +56,10 @@ const CustomerList = () => {
     const closeModal = () => {
         setShowCreateModal(false);
     };
+
+    useEffect(() => {
+        getAllCustomer();
+    }, [])
 
     return (
         <div className="p-6">
@@ -221,6 +141,9 @@ const CustomerList = () => {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                    SL
+                                </th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                                     Customer
                                 </th>
 
@@ -255,12 +178,18 @@ const CustomerList = () => {
                         </thead>
 
                         <tbody className="divide-y divide-gray-100 bg-white">
-                            {paginatedCustomers.length > 0 ? (
-                                paginatedCustomers.map((customer) => (
+                            {customers && customers.length > 0 ? (
+                                customers && customers.map((customer, index) => (
+
+
                                     <tr
                                         key={customer.id}
                                         className="transition hover:bg-gray-50"
                                     >
+
+                                        <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-700">
+                                            {index + 1}
+                                        </td>
                                         {/* Customer */}
                                         <td className="whitespace-nowrap px-4 py-4">
                                             <div className="flex items-center gap-3">
@@ -300,7 +229,7 @@ const CustomerList = () => {
 
                                         {/* Branch */}
                                         <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
-                                            {customer.branch || "-"}
+                                            {customer.branch?.name || "-"}
                                         </td>
 
                                         {/* KYC */}
@@ -368,7 +297,7 @@ const CustomerList = () => {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+                {/* <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="text-sm text-gray-500">
                         Showing{" "}
                         <span className="font-medium text-gray-700">
@@ -434,10 +363,10 @@ const CustomerList = () => {
                             Next
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
 
-            {showCreateModal && <AddModal closeModal={closeModal} />}
+            {showCreateModal && <AddModal closeModal={closeModal} getAllCustomer={getAllCustomer} />}
         </div>
     );
 };

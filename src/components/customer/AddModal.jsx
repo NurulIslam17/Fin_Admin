@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
+import customerService from '../../services/customerService';
+import toast from 'react-hot-toast';
 
-const AddModal = ({ closeModal }) => {
+const AddModal = ({ closeModal, getAllCustomer }) => {
 
     const [formData, setFormData] = useState({
-        user_id: "",
-        branch_id: "",
-        customer_no: "",
         first_name: "",
         last_name: "",
         gender: "",
@@ -17,9 +16,7 @@ const AddModal = ({ closeModal }) => {
         email: "",
         occupation: "",
         present_address: "",
-        permanent_address: "",
-        kyc_status: "PENDING",
-        status: "ACTIVE",
+        permanent_address: ""
     });
 
     const [errors, setErrors] = useState({});
@@ -39,12 +36,18 @@ const AddModal = ({ closeModal }) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // API call will go here 
-        console.log("Customer Data:", formData);
-        // Example: 
-        // // axios.post("/api/customers", formData); 
+        const res = await customerService.addCustomer(formData);
+        if (res?.status) {
+            toast.success("New Customer Added!");
+            closeModal();
+            getAllCustomer();
+        }
+        else {
+            toast.error("Something went wrong!");
+        }
+
     };
 
     const handleCloseModal = () => {
@@ -107,31 +110,6 @@ const AddModal = ({ closeModal }) => {
                             </h3>
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-
-                                {/* Customer No */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                                        Customer No
-                                        <span className="text-red-500">
-                                            {" "}*
-                                        </span>
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="customer_no"
-                                        value={formData.customer_no}
-                                        onChange={handleChange}
-                                        placeholder="CUS-000001"
-                                        className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                                    />
-
-                                    {errors.customer_no && (
-                                        <p className="mt-1 text-xs text-red-500">
-                                            {errors.customer_no}
-                                        </p>
-                                    )}
-                                </div>
 
                                 {/* First Name */}
                                 <div>
@@ -338,81 +316,6 @@ const AddModal = ({ closeModal }) => {
                         </div>
 
 
-                        {/* =========================
-                                    BRANCH INFORMATION
-                                ========================== */}
-
-                        <div className="border-t border-gray-100 pt-6">
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">
-                                Branch Information
-                            </h3>
-
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-
-                                {/* User */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                                        User
-                                        <span className="text-red-500">
-                                            {" "}*
-                                        </span>
-                                    </label>
-
-                                    <select
-                                        name="user_id"
-                                        value={formData.user_id}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
-                                    >
-                                        <option value="">
-                                            Select user
-                                        </option>
-
-                                        <option value="1">
-                                            John Doe
-                                        </option>
-
-                                        <option value="2">
-                                            Sarah Ahmed
-                                        </option>
-                                    </select>
-                                </div>
-
-                                {/* Branch */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                                        Branch
-                                        <span className="text-red-500">
-                                            {" "}*
-                                        </span>
-                                    </label>
-
-                                    <select
-                                        name="branch_id"
-                                        value={formData.branch_id}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
-                                    >
-                                        <option value="">
-                                            Select branch
-                                        </option>
-
-                                        <option value="1">
-                                            Dhaka Main Branch
-                                        </option>
-
-                                        <option value="2">
-                                            Gulshan Branch
-                                        </option>
-
-                                        <option value="3">
-                                            Banani Branch
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
 
                         {/* =========================
                                     ADDRESS
@@ -462,80 +365,6 @@ const AddModal = ({ closeModal }) => {
                                         placeholder="Enter permanent address"
                                         className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                                     />
-                                </div>
-                            </div>
-                        </div>
-
-
-                        {/* =========================
-                                    KYC & STATUS
-                                ========================== */}
-
-                        <div className="border-t border-gray-100 pt-6">
-                            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-700">
-                                KYC & Status
-                            </h3>
-
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-
-                                {/* KYC Status */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                                        KYC Status
-                                    </label>
-
-                                    <select
-                                        name="kyc_status"
-                                        value={formData.kyc_status}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
-                                    >
-                                        <option value="PENDING">
-                                            Pending
-                                        </option>
-
-                                        <option value="UNDER_REVIEW">
-                                            Under Review
-                                        </option>
-
-                                        <option value="VERIFIED">
-                                            Verified
-                                        </option>
-
-                                        <option value="REJECTED">
-                                            Rejected
-                                        </option>
-
-                                        <option value="EXPIRED">
-                                            Expired
-                                        </option>
-                                    </select>
-                                </div>
-
-                                {/* Status */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                                        Status
-                                    </label>
-
-                                    <select
-                                        name="status"
-                                        value={formData.status}
-                                        onChange={handleChange}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
-                                    >
-                                        <option value="ACTIVE">
-                                            Active
-                                        </option>
-
-                                        <option value="INACTIVE">
-                                            Inactive
-                                        </option>
-
-                                        <option value="BLOCKED">
-                                            Blocked
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
